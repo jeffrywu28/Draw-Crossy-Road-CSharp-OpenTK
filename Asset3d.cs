@@ -14,6 +14,7 @@ namespace ConsoleApp2
         List<Vector3> _normals = new List<Vector3>();
 
         List <uint> _indices = new List<uint>();
+        String color;
         int _vertexBufferObject;//buffer obj (handle variabel vertex spy bs di vgacard
         int _vertexArrayObject;//VAO  mengurus terkait array vertex yg kita kirim
         int _elementBufferObject;
@@ -30,8 +31,9 @@ namespace ConsoleApp2
         Matrix4 _projection;
         public List<Asset3d> Child = new List<Asset3d>();//biar bisa pny child masing2
 
-        public Asset3d()
+        public Asset3d(String color = "")
         {
+            this.color = color;
             _euler.Add(new Vector3(1, 0, 0));
             _euler.Add(new Vector3(0, 1 ,0));
             _euler.Add(new Vector3(0, 0, 1));
@@ -52,10 +54,6 @@ namespace ConsoleApp2
             //DEFAULT
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
-            //SETINGAN SETIAP VERTICES DENGAN COLOR (RGB)
-            //GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);//posisi vertex
-            //GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));//color vertex
-
             //Menyalakan var index[0] (layout location=0) yg ada pd shader.vert DEFAULT
             GL.EnableVertexAttribArray(0);
 
@@ -72,8 +70,12 @@ namespace ConsoleApp2
 
             //SETINGAN SHADER
             _shader = new Shader("D:/grafkom/C#/ConsoleApp2/shaders/shader.vert",
-                                 "D:/grafkom/C#/ConsoleApp2/shaders/shader.frag");
+                                 "D:/grafkom/C#/ConsoleApp2/shaders/shader" + color + ".frag");
             _shader.Use();
+
+            //_shader = new Shader("D:/grafkom/C#/ConsoleApp2/shaders/shader.vert",
+            //                     "D:/grafkom/C#/ConsoleApp2/shaders/shader1.frag");
+            //_shader.Use();
 
             //liat dari titik mana
             _view = Matrix4.CreateTranslation(0.0f,0.0f,-3.0f);
@@ -246,9 +248,492 @@ namespace ConsoleApp2
                 3,6,7
             };
         }
-        
-        public void createElipsoid(float radiusX, float radiusY, float radiusZ, float _x, float _y, float _z)
+
+        public void createBoxTopi(float x, float y, float z, float length)//ttik pusat dari box dimana
+        {//length panjang dari titik kubus
+
+            _centerPosition.X = x; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = y;
+            _centerPosition.Z = z;
+
+            Vector3 temp_vector;
+
+            //TITIK 1
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y + length / 8.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 2
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y + length / 8.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 3
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y - length / 8.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 4
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y - length / 8.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+
+            //TITIK 5
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y + length / 8.0f;
+            temp_vector.Z = z + length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 6
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y + length / 8.0f;
+            temp_vector.Z = z + length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 7
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y - length / 8.0f;
+            temp_vector.Z = z + length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 8
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y - length / 8.0f;
+            temp_vector.Z = z + length / 2.0f;
+            _vertices.Add(temp_vector);
+
+            _indices = new List<uint>
+            {
+                //SEGITIGA DEPAN 1
+                0,1,2,
+                //SEGITIGA DEPAN 2
+                1,2,3,
+                //SEGITIGA ATAS 1
+                0,4,5,
+                //SEGITIGA ATAS 2
+                0,1,5,
+                //SEGITIGA KANAN 1
+                1,3,5,
+                //SEGITIGA KANAN 2
+                3,5,7,
+                //SEGITIGA KIRI 1
+                0,2,4,
+                //SEGITIGA KIRI 2
+                2,4,6,
+                //SEGITIGA BELAKANG 1
+                4,5,6,
+                //SEGITIGA BELAKANG 2
+                5,6,7,
+                //SEGITIGA BAWAH 1
+                2,3,6,
+                //SEGITIGA BAWAH 2
+                3,6,7
+            };
+        }
+
+        public void createHidung(float x, float y, float z, float length)//ttik pusat dari box dimana
+        {//length panjang dari titik kubus
+
+            _centerPosition.X = x; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = y;
+            _centerPosition.Z = z;
+
+            Vector3 temp_vector;
+
+            //TITIK 1
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 2
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 3
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y - length / 4.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 4
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y - length / 4.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+
+            //TITIK 5
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z + length / 8.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 6
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z + length / 8.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 7
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y - length / 4.0f;
+            temp_vector.Z = z + length / 8.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 8
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y - length / 4.0f;
+            temp_vector.Z = z + length / 8.0f;
+            _vertices.Add(temp_vector);
+
+            _indices = new List<uint>
+            {
+                //SEGITIGA DEPAN 1
+                0,1,2,
+                //SEGITIGA DEPAN 2
+                1,2,3,
+                //SEGITIGA ATAS 1
+                0,4,5,
+                //SEGITIGA ATAS 2
+                0,1,5,
+                //SEGITIGA KANAN 1
+                1,3,5,
+                //SEGITIGA KANAN 2
+                3,5,7,
+                //SEGITIGA KIRI 1
+                0,2,4,
+                //SEGITIGA KIRI 2
+                2,4,6,
+                //SEGITIGA BELAKANG 1
+                4,5,6,
+                //SEGITIGA BELAKANG 2
+                5,6,7,
+                //SEGITIGA BAWAH 1
+                2,3,6,
+                //SEGITIGA BAWAH 2
+                3,6,7
+            };
+        }
+
+        public void createBoxBody(float x, float y, float z, float length)//ttik pusat dari box dimana
+        {//length panjang dari titik kubus
+
+            _centerPosition.X = x; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = y;
+            _centerPosition.Z = z;
+
+            Vector3 temp_vector;
+
+            //TITIK 1
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 2
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 3
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 4
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+
+            //TITIK 5
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+            //TITIK 6
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+            //TITIK 7
+            temp_vector.X = x - length / 2.0f;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+            //TITIK 8
+            temp_vector.X = x + length / 2.0f;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+
+            _indices = new List<uint>
+            {
+                //SEGITIGA DEPAN 1
+                0,1,2,
+                //SEGITIGA DEPAN 2
+                1,2,3,
+                //SEGITIGA ATAS 1
+                0,4,5,
+                //SEGITIGA ATAS 2
+                0,1,5,
+                //SEGITIGA KANAN 1
+                1,3,5,
+                //SEGITIGA KANAN 2
+                3,5,7,
+                //SEGITIGA KIRI 1
+                0,2,4,
+                //SEGITIGA KIRI 2
+                2,4,6,
+                //SEGITIGA BELAKANG 1
+                4,5,6,
+                //SEGITIGA BELAKANG 2
+                5,6,7,
+                //SEGITIGA BAWAH 1
+                2,3,6,
+                //SEGITIGA BAWAH 2
+                3,6,7
+            };
+        }
+
+        public void createBoxLidah(float x, float y, float z, float length)//ttik pusat dari box dimana
+        {//length panjang dari titik kubus
+
+            _centerPosition.X = x; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = y;
+            _centerPosition.Z = z;
+
+            Vector3 temp_vector;
+
+            //TITIK 1
+            temp_vector.X = x - length;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 2
+            temp_vector.X = x + length;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 3
+            temp_vector.X = x - length;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 4
+            temp_vector.X = x + length;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z - length / 2.0f;
+            _vertices.Add(temp_vector);
+
+            //TITIK 5
+            temp_vector.X = x - length;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+            //TITIK 6
+            temp_vector.X = x + length;
+            temp_vector.Y = y + length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+            //TITIK 7
+            temp_vector.X = x - length;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+            //TITIK 8
+            temp_vector.X = x + length;
+            temp_vector.Y = y - length / 2.0f;
+            temp_vector.Z = z + length;
+            _vertices.Add(temp_vector);
+
+            _indices = new List<uint>
+            {
+                //SEGITIGA DEPAN 1
+                0,1,2,
+                //SEGITIGA DEPAN 2
+                1,2,3,
+                //SEGITIGA ATAS 1
+                0,4,5,
+                //SEGITIGA ATAS 2
+                0,1,5,
+                //SEGITIGA KANAN 1
+                1,3,5,
+                //SEGITIGA KANAN 2
+                3,5,7,
+                //SEGITIGA KIRI 1
+                0,2,4,
+                //SEGITIGA KIRI 2
+                2,4,6,
+                //SEGITIGA BELAKANG 1
+                4,5,6,
+                //SEGITIGA BELAKANG 2
+                5,6,7,
+                //SEGITIGA BAWAH 1
+                2,3,6,
+                //SEGITIGA BAWAH 2
+                3,6,7
+            };
+        }
+
+        public void createBoxStand(float x, float y, float z, float length)//ttik pusat dari box dimana
+        {//length panjang dari titik kubus
+
+            _centerPosition.X = x; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = y;
+            _centerPosition.Z = z;
+
+            Vector3 temp_vector;
+
+            //TITIK 1
+            temp_vector.X = x - length / 3.0f;
+            temp_vector.Y = y + length / 2.5f;
+            temp_vector.Z = z - length / 3.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 2
+            temp_vector.X = x + length / 3.0f;
+            temp_vector.Y = y + length / 2.5f;
+            temp_vector.Z = z - length / 3.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 3
+            temp_vector.X = x - length / 3.0f;
+            temp_vector.Y = y - length / 3.0f;
+            temp_vector.Z = z - length / 3.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 4
+            temp_vector.X = x + length / 3.0f;
+            temp_vector.Y = y - length / 3.0f;
+            temp_vector.Z = z - length / 3.0f;
+            _vertices.Add(temp_vector);
+
+            //TITIK 5
+            temp_vector.X = x - length / 3.0f;
+            temp_vector.Y = y + length / 2.5f;
+            temp_vector.Z = z + length / 3.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 6
+            temp_vector.X = x + length / 3.0f;
+            temp_vector.Y = y + length / 2.5f;
+            temp_vector.Z = z + length / 3.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 7
+            temp_vector.X = x - length / 3.0f;
+            temp_vector.Y = y - length / 3.0f;
+            temp_vector.Z = z + length / 3.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 8
+            temp_vector.X = x + length / 3.0f;
+            temp_vector.Y = y - length / 3.0f;
+            temp_vector.Z = z + length / 3.0f;
+            _vertices.Add(temp_vector);
+
+            _indices = new List<uint>
+            {
+                //SEGITIGA DEPAN 1
+                0,1,2,
+                //SEGITIGA DEPAN 2
+                1,2,3,
+                //SEGITIGA ATAS 1
+                0,4,5,
+                //SEGITIGA ATAS 2
+                0,1,5,
+                //SEGITIGA KANAN 1
+                1,3,5,
+                //SEGITIGA KANAN 2
+                3,5,7,
+                //SEGITIGA KIRI 1
+                0,2,4,
+                //SEGITIGA KIRI 2
+                2,4,6,
+                //SEGITIGA BELAKANG 1
+                4,5,6,
+                //SEGITIGA BELAKANG 2
+                5,6,7,
+                //SEGITIGA BAWAH 1
+                2,3,6,
+                //SEGITIGA BAWAH 2
+                3,6,7
+            };
+        }
+
+        public void createBoxStandThin(float x, float y, float z, float length, String m_color)//ttik pusat dari box dimana
+        {//length panjang dari titik kubus
+
+            _centerPosition.X = x; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = y;
+            _centerPosition.Z = z;
+
+            this.color = m_color;
+
+            Vector3 temp_vector;
+
+            //TITIK 1
+            temp_vector.X = x - length / 10.0f;
+            temp_vector.Y = y + length;
+            temp_vector.Z = z - length / 10.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 2
+            temp_vector.X = x + length / 10.0f;
+            temp_vector.Y = y + length;
+            temp_vector.Z = z - length / 10.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 3
+            temp_vector.X = x - length / 10.0f;
+            temp_vector.Y = y - length / 10.0f;
+            temp_vector.Z = z - length / 10.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 4
+            temp_vector.X = x + length / 10.0f;
+            temp_vector.Y = y - length / 10.0f;
+            temp_vector.Z = z - length / 10.0f;
+            _vertices.Add(temp_vector);
+
+            //TITIK 5
+            temp_vector.X = x - length / 10.0f;
+            temp_vector.Y = y + length;
+            temp_vector.Z = z + length / 10.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 6
+            temp_vector.X = x + length / 10.0f;
+            temp_vector.Y = y + length;
+            temp_vector.Z = z + length / 10.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 7
+            temp_vector.X = x - length / 10.0f;
+            temp_vector.Y = y - length / 10.0f;
+            temp_vector.Z = z + length / 10.0f;
+            _vertices.Add(temp_vector);
+            //TITIK 8
+            temp_vector.X = x + length / 10.0f;
+            temp_vector.Y = y - length / 10.0f;
+            temp_vector.Z = z + length / 10.0f;
+            _vertices.Add(temp_vector);
+
+            _indices = new List<uint>
+            {
+                //SEGITIGA DEPAN 1
+                0,1,2,
+                //SEGITIGA DEPAN 2
+                1,2,3,
+                //SEGITIGA ATAS 1
+                0,4,5,
+                //SEGITIGA ATAS 2
+                0,1,5,
+                //SEGITIGA KANAN 1
+                1,3,5,
+                //SEGITIGA KANAN 2
+                3,5,7,
+                //SEGITIGA KIRI 1
+                0,2,4,
+                //SEGITIGA KIRI 2
+                2,4,6,
+                //SEGITIGA BELAKANG 1
+                4,5,6,
+                //SEGITIGA BELAKANG 2
+                5,6,7,
+                //SEGITIGA BAWAH 1
+                2,3,6,
+                //SEGITIGA BAWAH 2
+                3,6,7
+            };
+        }
+
+        public void createElipsoid(float radiusX, float radiusY, float radiusZ, float _x, float _y, float _z, String color)
         {
+            this.color = color;
             float pi = (float)Math.PI;
             Vector3 temp_vector;
 
@@ -313,18 +798,19 @@ namespace ConsoleApp2
             }
         }
 
-        public void createHyperboloidSatuSisi(float radiusX, float radiusY, float radiusZ, float _x, float _y, float _z)
+        public void createHyperboloidSatuSisi(float radiusX, float radiusY, float radiusZ, float _x, float _y, float _z, String m_color)
         {
             float pi = (float)Math.PI;
             Vector3 temp_vector;
 
+            this.color = m_color;
             for (float u = -pi; u <= pi; u += pi / 300)//u range di tabel
             {
-                for (float v = -pi / 2; v <= pi / 2; v += pi / 30) //v range di tabel, pembagi semakin besar, garis semakin banyak
+                for (float v = -pi / 2; v <= pi / 2; v += pi / 300) //v range di tabel, pembagi semakin besar, garis semakin banyak
                 {
-                    temp_vector.Y = _x + (1/(float)Math.Cos(v)) * (float)Math.Cos(u) * radiusX;
-                    temp_vector.Z = _y + (1/(float)Math.Cos(v)) * (float)Math.Sin(u) * radiusY;
-                    temp_vector.X = _z + (float)Math.Tan(v) * radiusZ;
+                    temp_vector.X = _x + (1/(float)Math.Cos(v)) * (float)Math.Cos(u) * radiusX;
+                    temp_vector.Y = _y + (1/(float)Math.Cos(v)) * (float)Math.Sin(u) * radiusY;
+                    temp_vector.Z = _z + (float)Math.Tan(v) * radiusZ;
                     _vertices.Add(temp_vector);
                 }
             }
@@ -364,11 +850,11 @@ namespace ConsoleApp2
 
             for (float u = -pi; u <= pi; u += pi / 30)//u range di tabel
             {
-                for (float v = 0; v <= 50; v += pi / 30) //v range di tabel, pembagi semakin besar, garis semakin banyak
+                for (float v = 0; v <= 100; v += pi / 30) //v range di tabel, pembagi semakin besar, garis semakin banyak
                 {
-                    temp_vector.Y = _x + (float)Math.Cos(u) * (radiusX* v);
-                    temp_vector.Z = _y + ((float)Math.Sin(u) * (radiusY * v));
-                    temp_vector.X = _z + (float)Math.Pow(v,2)  * radiusZ;
+                    temp_vector.X = _x + (float)Math.Cos(u) * (radiusX*v);
+                    temp_vector.Y = _y + ((float)Math.Sin(u) * (radiusY * v));
+                    temp_vector.Z = _z + (float)v * radiusZ;
                     _vertices.Add(temp_vector);
                 }
             }
@@ -408,8 +894,9 @@ namespace ConsoleApp2
             }
         }
         
-        public void loadObjFile(string path)
+        public void loadObjFile(string path,String m_color)
         {
+            this.color = m_color;
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException("Unable to open");
@@ -431,7 +918,7 @@ namespace ConsoleApp2
                     switch (type)
                     {//ngecilin obj /10
                         case "v":
-                            _vertices.Add(new Vector3(float.Parse(words[0])/10, float.Parse(words[1])/10, float.Parse(words[2])/10));
+                            _vertices.Add(new Vector3(float.Parse(words[0])/5, float.Parse(words[1])/5, float.Parse(words[2])/5));
                             break;
                         case "vt":
                             _textureVertices.Add(new Vector3(float.Parse(words[0]), float.Parse(words[1]), words.Count < 3 ? 0 : float.Parse(words[2])));
@@ -540,10 +1027,182 @@ namespace ConsoleApp2
             _euler[2] = new Vector3(0, 0, 1);
         }
 
-        public void addChild(float x, float y, float z, float length){
-            Asset3d newChild=new Asset3d();
+        public void addChildCubes(float x, float y, float z, float length, String color){
+            Asset3d newChild=new Asset3d(color);
             newChild.createBoxVertices(x,y,z,length);
             Child.Add(newChild);
+        }
+
+        public void addChildBox(float x, float y, float z, float length, String color)
+        {
+            Asset3d newChild = new Asset3d(color);
+            newChild.createBoxBody(x, y, z, length);
+            Child.Add(newChild);
+        }
+
+        public void addChildBuletanTopi(float x, float y, float z, float length, String color)
+        {
+            Asset3d newChild = new Asset3d(color);
+            newChild.createBoxTopi(x, y, z, length);
+            Child.Add(newChild);
+        }
+
+        public void addChildHidung(float x, float y, float z, float length, String color)
+        {
+            Asset3d newChild = new Asset3d(color);
+            newChild.createHidung(x, y, z, length);
+            Child.Add(newChild);
+        }
+
+        public void addChildBoxStand(float x, float y, float z, float length, String color)
+        {
+            Asset3d newChild = new Asset3d(color);
+            newChild.createBoxStand(x, y, z, length);
+            Child.Add(newChild);
+        }
+
+        public void addChildpersegi(float x, float y, float z, float length, String m_color)
+        {
+            Asset3d newChild = new Asset3d(m_color);
+            newChild.createPersegi(x, y, z, length,color);
+            Child.Add(newChild);
+        }
+
+        public void addChildlidah(float x, float y, float z, float length, String m_color)
+        {
+            Asset3d newChild = new Asset3d(m_color);
+            newChild.createBoxLidah(x, y, z, length);
+            Child.Add(newChild);
+        }
+
+        public void addChildBall(float rX, float rY, float rZ, float _x, float _y, float _z,String m_color)
+        {
+            Asset3d newChild = new Asset3d(color);
+            newChild.createElipsoid(rX,rY,rZ,_x,_y,_z,m_color);
+            Child.Add(newChild);
+        }
+
+        public void addChildTabung(float _positionX = 0.4f,
+        float _positionY = 0.4f,
+        float _positionZ = 0.4f,
+        float _radius = 0.3f, float _height = 0.2f, float _extended = 0.5f)
+        {
+            Asset3d newChild = new Asset3d(color);
+            newChild.createTabung(_positionX, _positionY, _positionZ, _radius, _height, _extended);
+            Child.Add(newChild);
+        }
+
+        public void trans(float x, float y, float z)
+        {
+            transform = transform * Matrix4.CreateTranslation(x, y, z);
+        }
+
+        //untuk mengatur ukuran objek
+        public void scale(float x)
+        {
+
+            transform = transform * Matrix4.CreateTranslation(-1 * (_centerPosition)) * Matrix4.CreateScale(x) * Matrix4.CreateTranslation((_centerPosition));
+        }
+
+
+        public void createPersegi(float x, float y, float z, float length, String _color)//ttik pusat dari box dimana
+        {//length panjang dari titik kubus
+
+            _centerPosition.X = x; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = y;
+            _centerPosition.Z = z;
+
+            Vector3 temp_vector;
+
+            //TITIK 1
+            temp_vector.X = 0.5f;
+            temp_vector.Y = -0.5f;
+            temp_vector.Z = -0.1f;
+            _vertices.Add(temp_vector);
+            //TITIK 2
+            temp_vector.X = -0.5f;
+            temp_vector.Y = -0.5f;
+            temp_vector.Z = -0.1f;
+            _vertices.Add(temp_vector);
+            //TITIK 3
+            temp_vector.X = -0.5f;
+            temp_vector.Y = -0.5f;
+            temp_vector.Z = 2.5f;
+            _vertices.Add(temp_vector);
+            //TITIK 4
+            temp_vector.X = 0.5f;
+            temp_vector.Y = -0.5f;
+            temp_vector.Z = 2.5f;
+            _vertices.Add(temp_vector);
+
+            _indices = new List<uint>
+            {
+                //SEGITIGA DEPAN 1
+               0,1,3, //segitiga pertama
+               1,2,3 //segitiga ke 2
+            };
+            this.color = _color;
+        }
+
+        public void createTabung(float _positionX = 0.4f,
+        float _positionY = 0.4f,
+        float _positionZ = 0.4f,
+        float _radius = 0.3f, float _height = 0.2f, float _extended = 0.5f)
+        {
+            _centerPosition.X = _positionX; //jgn lupa selalu tambahkan ini
+            _centerPosition.Y = _positionY;
+            _centerPosition.Z = _positionZ;
+
+            Vector3 temp_vector;
+            float _pi = (float)Math.PI;
+
+
+            for (float v = -_height / 2; v <= (_height / 2); v += 0.0001f)
+            {
+                Vector3 p = setBeizer((v + (_height / 2)) / _height);
+                for (float u = -_pi; u <= _pi; u += (_pi / 30))
+                {
+
+                    temp_vector.X = p.X + _radius * (float)Math.Cos(u);
+                    temp_vector.Y = p.Y + _radius * (float)Math.Sin(u);
+                    temp_vector.Z = _positionZ + v;
+
+                    _vertices.Add(temp_vector);
+
+                }
+            }
+
+
+
+        }
+
+        Vector3 setBeizer(float t)
+        {
+            //Console.WriteLine(t);
+            Vector3 p = new Vector3(0f, 0f, 0f);
+            float[] k = new float[3];
+
+            k[0] = (float)Math.Pow((1 - t), 3 - 1 - 0) * (float)Math.Pow(t, 0) * 1;
+            k[1] = (float)Math.Pow((1 - t), 3 - 1 - 1) * (float)Math.Pow(t, 1) * 2;
+            k[2] = (float)Math.Pow((1 - t), 3 - 1 - 2) * (float)Math.Pow(t, 2) * 1;
+
+
+            //titik 1
+            p.X += k[0] * _centerPosition.X;
+            p.Y += k[0] * _centerPosition.Y;
+
+            //titik 2
+            p.X += k[1] * (_centerPosition.X);
+            p.Y += k[1] * _centerPosition.Y;
+
+            //titik 3
+            p.X += k[2] * _centerPosition.X;
+            p.Y += k[2] * _centerPosition.Y;
+
+            //Console.WriteLine(p.X + " "+ p.Y);
+
+            return p;
+
         }
     }
 }

@@ -5,7 +5,7 @@ layout(location=0) in vec3 aPosition;
 //layout(location=1) in vec3 aColor; //RGB only
 
 //mengganti value file shader.frag, data akan dilempar ke shader.frag
-out vec4 vertexColor;
+//out vec4 vertexColor2;
 
 //RGB only
 //out vec3 ourColor;
@@ -19,7 +19,7 @@ void main(void){
 	gl_Position = vec4(aPosition,1.0) * transform * view * projection;
 
 	//mewarnai MERAH pada object,lalu data akan dilempar ke shader.frag
-	//vertexColor = vec4(1.0,0.0,0.0,1.0);
+	//vertexColor2 = vec4(1.0,0.0,0.0,1.0);
 
 	//ourColor = aColor;
 }
